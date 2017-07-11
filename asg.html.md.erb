@@ -450,11 +450,46 @@ As an operator, correlating the emitted logs back to an application can aid in e
 
 ###<a id="asg-logging-prereq"></a> Prerequisites
 
-In order to trace logs, the `log` attribute must be set to `true` in the the rules file, which is a JSON-formatted file containing a single array of objects that describe the rules for your Application Security Groups. For more information on creating Application Security Groups, see the “Create ASGs” section of the [Understanding Application Security Groups](https://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual) topic. 
+In order to trace logs, the `log` attribute must be set to `true` in the rules file, which is a JSON-formatted file containing a single array of objects that describe the rules for your Application Security Groups. For more information on creating Application Security Groups, see the “Create ASGs” section of the [Understanding Application Security Groups](https://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual) topic. 
 
 ###<a id="single-ip"></a> Logging Traffic from a Single IP
 
 In this example, the ASG is bound to org “o” and space “s” which has one app, “proxy,” running. The "proxy" app will forward HTTP requests to the URL/IP provided in the curl URI.
 
+<code>curl proxy.<cf-domain>/proxy/foo.com will forward requests to foo.com</code>
+
+
+In the below code sample from an example rules file, all requests to the single IP, which is in this case the GoRouter, IP 10.87.35.105 (Gorouter IP) will be logged in the syslog server. 
+
+<pre class="terminal">
+[ 
+  { 
+    "protocol": "tcp", 
+    "destination": "10.87.35.105", 
+    "ports":"80",   
+    "log": true, 
+    "description": "Allow apps to reach gorouter" 
+  } 
+]
+</pre>
+
+To generate the log entry, we will use the PROXY app to forward the request to the GoRouter with the following command:
+
+<code>curl proxy.cfapps-14.haas-59.pez.pivotal.io/proxy/10.193.79.30:80</code>
+
+This will generate the following syslog entry:
+
+<pre class="terminal">
+Jun 16 23:18:38 10.193.79.37 kern kernel [job=diego_cell index=1] [2681198.826158] 1f97ff6d-4517-43a0-5aef-
+f5915IN=wbrdg-0afe0008 OUT=eth0 MAC=1e:4d:39:af:e6:04:72:87:1b:3b:15:01:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60
+TOS=0x00 PREC=0x00 TTL=63 ID=40628 DF PROTO=TCP SPT=52232 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
+Note the SRC IP and DST IP - SRC IP is the IP of the container trying to reach DST Ggorouter IP 
+</pre>
+
+###<a id="cidr"></a> Logging Traffic from a CIDR Range
+
+In order to trace logs from a CIDR Range, the `destination` attribute the rules file must be defined as a range of addresses, for example:
+
+<code>"destination": "0.0.0.0-0.0.0.255",</code>
 
 <% end %>
