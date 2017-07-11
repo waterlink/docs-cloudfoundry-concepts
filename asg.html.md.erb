@@ -446,6 +446,15 @@ You can download the latest release of the ASG Creator from the Cloud Foundry in
 
 ##<a id='logging'></a> ASG Logging
 
-The KB article [How to use Application Security Group (ASG) logging](https://discuss.pivotal.io/hc/en-us/articles/115005916027) describes how you can use ASGs to correlate emitted logs back to an app. 
+As an operator, correlating the emitted logs back to an application can aid in expediting troubleshooting and debugging. The logs provide granular information including the org, space, source, and destination addresses. 
+
+###<a id="asg-logging-prereq"></a> Prerequisites
+
+In order to trace logs, the `log` attribute must be set to `true` in the the rules file, which is a JSON-formatted file containing a single array of objects that describe the rules for your Application Security Groups. For more information on creating Application Security Groups, see the “Create ASGs” section of the [Understanding Application Security Groups](https://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual) topic. 
+
+###<a id="single-ip"></a> Logging Traffic from a Single IP
+
+In this example, the ASG is bound to org “o” and space “s” which has one app, “proxy,” running. The "proxy" app will forward HTTP requests to the URL/IP provided in the curl URI.
+
 
 <% end %>
