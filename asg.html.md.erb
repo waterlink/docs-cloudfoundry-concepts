@@ -490,6 +490,13 @@ Note the SRC IP and DST IP - SRC IP is the IP of the container trying to reach D
 
 In order to trace logs from a CIDR Range, the `destination` attribute the rules file must be defined as a range of addresses, for example:
 
-<code>"destination": "0.0.0.0-0.0.0.255",</code>
+<code>"destination": "0.0.0.0-0.0.0.255"</code>
+
+<p class="note"><strong>Note</strong>:For this procedure to work, it is necessary to have aggregated logging for Syslog messages to a Syslog server. See the instructions to set up Syslog forwarding here. 
+</p>
+
+Step 1. Run the curl command to the PROXY app from the example above to generate a log entry
+
+<code>curl PROXY.cfapps-14.haas-59.pez.pivotal.io/PROXY/10.193.79.30:80</code>
 
 <% end %>
