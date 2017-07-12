@@ -495,10 +495,34 @@ In order to trace logs from a CIDR Range, the `destination` attribute the rules 
 <p class="note"><strong>Note</strong>:For this procedure to work, it is necessary to have aggregated logging for Syslog messages to a Syslog server. See the instructions to set up Syslog forwarding here. 
 </p>
 
-Step 1. Run the curl command to the PROXY app from the example above to generate a log entry
+Step . Run the curl command to the PROXY app from the example above to generate a log entry
 
 <code>curl PROXY.cfapps-14.haas-59.pez.pivotal.io/PROXY/10.193.79.30:80</code>
 
-test
+Step . Search the log by manually or via running the <code>grep</code> command. Available attributes include: GoRouter, DST,.... 
+
+Step . To obtain the process_guid attribute, which is the unique identifier, search for the `process_guid:`
+
+Step . $ grep "DST=10.193.79.30" *
+
+10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] d08bb414-cdba-4381-412a-e9eccIN=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
+
+This is the container id d08bb414-cdba-4381-412a-e9ecc
+
+Step . grep the container id in order to get the process_guid
+
+Grab the the first 32 octets from the 64 octet entry.  
+
+This is the "process_guid":"4ccbb24c-268e-421a-9d1b-3678b6eb40d0
+
+Use cf curl /v2/apps/PROCESS_GUID
+This gets the space URL
+
+$ cf curl /v2/spaces/SPACE_URL
+To get the organization URL
+
+ cf curl /v2/organizations/ORG_URL
+
+
 
 <% end %>
