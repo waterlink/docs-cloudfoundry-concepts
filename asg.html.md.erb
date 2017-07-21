@@ -476,7 +476,7 @@ To obtain a log entry, utilize the `grep` command and specify the IP address tha
 
 As an example, we will be using 10.193.79.30 as the IP address. 
 
-<pre class=“terminal”>
+<pre class="terminal">
 $ grep “DST= 10.193.79.30”
 
 10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9eccIN</b>=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
@@ -496,7 +496,7 @@ grep d08bb414-cdba-4381-412a-e9ecc 10.193.79.42.log| grep "vcap.rep" | grep proc
 
 After running the `grep` command with the <b>container_id</b>, the resulting terminal output will contain the <b>process_guid</b>. 
 
-<pre class= “terminal”>
+<pre class= "terminal">
 Jun 22 13:07:52 10.193.79.42 user vcap.rep [job=diego_cell index=2]  {"timestamp":"1498136872.889604807",
 "source":"rep","message":"rep.executing-container-operation.ordinary-lrp-processor.process-reserved-
 container.run-container.containerstore-run.node-run.action.run-step.process-exit","log_level":1,
@@ -513,7 +513,7 @@ The <b>process_guid</b> string in the resulting output is comprised of 73 charac
 
 As an example, we will use the the process_guid from the prior example. 
 
-<pre class= “terminal”>
+<pre class= "terminal">
 $ cf curl /v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0
 
 {
@@ -549,7 +549,7 @@ To obtain the space <b>name</b> and <b>organization_url</b>, use the `cf curl` c
 
 As an example, we will use the the space_url from the prior example. 
 
-<pre= “terminal”>
+<pre class= "terminal">
 $ cf curl /v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812
 
 {
@@ -583,7 +583,7 @@ To obtain the organization <b>name</b> use the `cf curl` command in conjunction 
 
 As an example, we will use the the organizational_url from the prior example. 
 
-<pre= “terminal”>
+<pre class= "terminal">
 $ cf curl /v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb 
 
 {
@@ -631,7 +631,7 @@ To call the events record run the cf curl command in the following way:
 
 The resulting terminal output will contain the space_guid, organization_guid, and other relevant information. As an example, we will use the the container_id from a prior example: 
 
-<pre= “terminal”>
+<pre class= "terminal">
  $ cf curl /v2/events?q=actee:4ccbb24c-268e-421a-9d1b-3678b6eb40d0
  {
   "total_results": 6,
