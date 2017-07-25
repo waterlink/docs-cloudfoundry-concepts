@@ -434,10 +434,10 @@ You can download the latest release of the ASG Creator from the Cloud Foundry in
 
 ## <a id='logging'></a> ASG Logging
 
-As an operator, correlating the emitted logs back to an application can aid in troubleshooting and debugging. In addition, correlating logs is helpful for auditing and detecting possible malicious activity. The generated logs provide granular information including the org, space, source, and destination addresses. 
+As an operator, correlating the emitted logs back to an application can aid in troubleshooting and debugging that application. Correlating logs is also helpful for auditing and detecting possible malicious activity. The generated logs provide granular information including the org, space, source, and destination addresses. 
 ### <a id="asg-logging-prereq"></a> Configuring your Rules File
 
-In order to trace logs, the `log` attribute must be set to `true` in your rules file, a JSON-formatted file containing a single array of objects that describes the rules for your Application Security Groups.
+In order to trace application logs, the `log` attribute must be set to `true` in your rules file. In the context of ASG Logging, a rules file is a JSON file that describes the rules for your Application Security Groups.
 
 For more information on configuring the rules file and creating Application Security Groups, see the “Create ASGs” section of the [Understanding Application Security Groups](https://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual) topic. 
 
@@ -455,25 +455,29 @@ Below is a code sample from an example rules file. In this example, the rules fi
   ]
 </pre>
 
-###<a id="single-ip"></a> Obtain Traffic Logs from a Single IP
+###<a id="single-ip"></a> Tracing the Traffic Logs of a Single IP
 
-To obtain a log entry, utilize the `grep` command and specify the IP address that you want to audit:
+Obtaining the app name, space name, space url, organization name, and organization url, is an ordinal process. 
+
+After obtaining the <b>container\_id</b> and <b>process\_guid</b>, the <b>process\_guid</b> is then queried to obtain the <b>space\_url</b>. The <b>space\_url</b> is then queried to obtain the space <b>name</b> and <b>organization\_url</b>. Finally, the <b>organization\_url</b> is queried to obtain the organization <b>name</b>.
+
+To obtain a log entry and <b>container_id</b>, utilize the `grep` command and specify the IP address that you want to audit:
 
 `$ grep “DST= IP_ADDRESS”`
 
 As an example, we will be using 10.193.79.30 as the IP address. 
 
 <pre class="terminal">
-  $ grep “DST= 10.193.79.30”
+$ grep “DST= 10.193.79.30”
 
-  10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9eccIN</b>=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
+10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9eccIN</b>=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
 </pre>
 
 In the above terminal output the <b>container\_id</b> is bolded above. The <b>container\_id</b> is a 31 character unique ID that allows operators to trace back to the app. The <b>containder\_id</b>, as evidenced above, precedes “IN” in log entries. Operators can query the <b>container\_id</b> to obtain the <b>process\_guid</b>. 
 
 To obtain the <b>process\_guid</b> run the `grep` command in conjunction with the <b>container\_id</b> in the following way:
 
-`$ grep CONTAINER_ID | “vcap.rep” | grep process_guid`
+`$ grep CONTAINER_ID | grep “vcap.rep” | grep process_guid`
 
 As an example, we will use the the container\_id from the prior example. 
 
