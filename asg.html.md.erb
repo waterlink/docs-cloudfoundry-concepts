@@ -434,9 +434,9 @@ You can download the latest release of the ASG Creator from the Cloud Foundry in
 
 ## <a id='logging'></a> ASG Logging
 
-As an operator, correlating the emitted logs back to an application can aid in troubleshooting and debugging that application. The generated logs provide granular information including the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_name</b>,  <b>container\_id</b>, and <b>process\_guid</b>.
+Tracing application logs can aid in troubleshooting and debugging. These logs provide granular information including the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_name</b>,  <b>container\_id</b>, and <b>process\_guid</b>.
 
-### <a id="asg-logging-prereq"></a> Configuring your Rules File
+### <a id="asg-logging-prereq"></a> Configure the Rules File
 
 In order to trace application logs, the `log` attribute must be set to `true` in the rules file. In the context of ASG Logging, a rules file is a JSON file that describes the rules for your Application Security Groups.
 
@@ -456,9 +456,9 @@ Below is a code sample from an example rules file. In this example, the rules fi
   ]
 </pre>
 
-###<a id="single-ip"></a> Tracing the Traffic Logs of a Single IP
+###<a id="single-ip"></a> Trace the Traffic Logs of a Single IP
 
-Obtaining the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_ name</b> is a sequential and interdependent process. 
+Obtaining the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, and <b>organization\_ name</b> is a sequential and interdependent process. 
 
 First, the operator must obtain the <b>container\_id</b>. The operator can then use the <b>container\_id</b> to obtain the <b>process\_guid</b>. The <b>process\_guid</b> is then queried to obtain the <b>space\_url</b>. The <b>space\_url</b> is then queried to obtain the space <b>name</b> and <b>organization\_url</b>. Finally, the <b>organization\_url</b> is queried to obtain the organization <b>name</b>.
 
@@ -476,7 +476,7 @@ $ grep “DST= 10.193.79.30”
 10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9eccIN</b>=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
 </pre>
 
-In the above terminal output, the <b>container\_id</b> is bolded above. The <b>container\_id</b> is a 31 character unique ID that allows operators to trace back to the app. The <b>containder\_id</b>, as evidenced above, precedes “IN” in log entries. Operators must query the <b>container\_id</b> to obtain the <b>process\_guid</b>. 
+In the above terminal output, the <b>container\_id</b> is bolded. The <b>container\_id</b> is a 31 character unique ID that allows operators to trace back to the application. The <b>containder\_id</b>, as evidenced above, precedes “IN” in log entries. Operators must query the <b>container\_id</b> to obtain the <b>process\_guid</b>. 
 
 Step 2: Obtain the <b>process\_guid</b>
 
@@ -506,7 +506,7 @@ After running the `grep` command with the <b>container_id</b>, the resulting ter
 The <b>process\_guid</b> string in the resulting output is comprised of 73 characters, inclusive of dashes. 
 
 Step 3. Obtain the app <b>name</b> and <b>space\_url</b>
-The operator only needs the first 36 characters of the process guid string in combination with the `cf curl` command to query for the app <b>name</b> and <b>space_url</b>. 
+The operator only needs the first 36 characters of the <b>process\_guid</b> string in combination with the `cf curl` command to query for the app <b>name</b> and <b>space_url</b>. 
 
 `$ cf curl /v2/apps/PROCESS_GUID`
 
@@ -545,7 +545,8 @@ As an example, we will use the the <b>process\_guid</b> from the prior example.
 
 Step 4. Obtain the space <b>name</b> and <b>organization\_url</b> 
 
-To obtain the space <b>name</b> and <b>organization\_url</b>, use the `cf curl` command in conjunction with the <b>space\_url</b> in the following way.
+To obtain the space <b>name</b> and <b>organization\_url</b>, use the `cf curl` command in conjunction with the <b>space\_url</b> in the following way:
+
 `$ cf curl /v2/spaces/SPACE_URL`
 
 As an example, we will use the the <b>space\_url</b> from the prior example. 
@@ -632,7 +633,7 @@ To obtain historical information from an app that has since been deleted, call t
 To call the events record run the `cf curl` command in the following way: 
 `$ cf curl /v2/events?q=actee:CONTAINER_ID`. 
 
-The resulting terminal output will contain the <b>space\_guid</b>, <b>organization\_guid</b>, and other relevant information. As an example, we will use the the <b>container\_id</b> from a prior example: 
+The resulting terminal output will contain the <b>space\_guid</b>, <b>organization\_guid</b>, and other relevant information. As an example, we will use the the <b>container\_id</b> from the prior example: 
 
 <pre class= "terminal">
   $ cf curl /v2/events?q=actee:4ccbb24c-268e-421a-9d1b-3678b6eb40d0
@@ -680,7 +681,7 @@ The resulting terminal output will contain the <b>space\_guid</b>, <b>organizati
   --snip--
 </pre>
 
-###<a id="cidr"></a> Tracing the Traffic Logs of a CIDR Range
+###<a id="cidr"></a> Trace the Traffic Logs of a CIDR Range
 
 In order to trace logs from a CIDR Range, the `destination` attribute in the rules file must be defined as a range of addresses, for example:
 
@@ -697,7 +698,7 @@ In order to trace logs from a CIDR Range, the `destination` attribute in the rul
 </pre>
 
 <p class="note"><strong>Note:</strong>
-For this procedure to work, it is necessary to have aggregated logging for Syslog messages to a Syslog server. For more information, see <a href="https://docs.pivotal.io/pivotalcf/1-10/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the Configuring System Logging in Elastic Runtime topic. 
+For this procedure to work, it is necessary to have aggregated logging for Syslog messages to a Syslog server. For more information, see the <a href="https://docs.pivotal.io/pivotalcf/1-10/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the "Configuring System Logging in Elastic Runtime" topic. 
 </p>
 
 The method of obtaining the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_ name</b>,  <b>container\_id</b>, and <b>process\_guid</b> are the same as outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page.
