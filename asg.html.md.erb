@@ -56,12 +56,12 @@ subnets, while denying access to any virtual machine (VM) hosting other apps.
 
 For examples of typical ASGs, see the <a href="#typical-groups">Typical Application Security Groups</a> section of this topic.
 
-### <a id='default-asg'></a>Default ASGs ##
+### <a id='default-asg'></a>Default ASGs
 
 <% if vars.product_name == 'CF' %>
-<%= partial 'default_asg_oss' %>
+  <%= partial 'default_asg_oss' %>
 <% else %>
-<%= partial '../opsguide/default_asg' %>
+  <%= partial '../opsguide/default_asg' %>
 <% end %>
 
 ### <a id="asg-sets"></a> ASG Sets
