@@ -472,7 +472,7 @@ First, the operator must obtain the <b>container\_id</b>. The operator can then 
 
 Step 1. Obtain the <b>container_id</b>
 
-To generate the desired log entry and related <b>container_id</b>, run the `grep` command and specify the IP address that you want to audit:
+Run the `grep` command and specify the IP address that you want to audit to generate the desired log entry and related <b>container_id</b>:
 
 `$ grep “DST= IP_ADDRESS”`
 
@@ -488,7 +488,7 @@ In the above terminal output, the <b>container\_id</b> is bolded. The <b>contain
 
 Step 2: Obtain the <b>process\_guid</b>
 
-To obtain the <b>process\_guid</b>, run the `grep` command in conjunction with the <b>container\_id</b> in the following way:
+Run the `grep` command in conjunction with the <b>container\_id</b> in the following way to obtain the <b>process\_guid</b>:
 
 `$ grep CONTAINER_ID | grep “vcap.rep” | grep process_guid`
 
@@ -498,7 +498,9 @@ Example below:
   grep d08bb414-cdba-4381-412a-e9ecc 10.193.79.42.log| grep "vcap.rep" | grep process\_guid
 </pre>
 
-After running the `grep` command with the <b>container_id</b>, the resulting terminal output will contain the <b>process\_guid</b>. 
+Run the `grep` command with the <b>container_id</b> to generate the <b>process\_guid</b>. 
+
+Example below:
 
 <pre class= "terminal">
   Jun 22 13:07:52 10.193.79.42 user vcap.rep [job=diego_cell index=2]  {"timestamp":"1498136872.889604807",
@@ -553,7 +555,7 @@ Example below:
 
 Step 4. Obtain the space <b>name</b> and <b>organization\_url</b> 
 
-To obtain the space <b>name</b> and <b>organization\_url</b>, use the `cf curl` command in conjunction with the <b>space\_url</b> in the following way:
+Run the `cf curl` command in conjunction with the <b>space\_url</b> in the following way to obtain the space <b>name</b> and <b>organization\_url</b>, :
 
 `$ cf curl /v2/spaces/SPACE_URL`
 
@@ -589,7 +591,7 @@ Example below:
 
 Step 5: Obtain the <b>organization\_name</b>
 
-To obtain the organization <b>name</b> use the `cf curl` command in conjunction with the <b>organization\_url</b> in the following way:
+Run the `cf curl` command in conjunction with the <b>organization\_url</b> in the following way to obtain the organization <b>name</b>:
 
 `$ cf curl /v2/organizations/ORGANIZATION_URL`
 
@@ -636,7 +638,7 @@ If an app has been deleted, `cf curl /v2/apps/PROCESS_GUID` yields the following
   }
 </pre>
 
-To obtain historical information from an app that has since been deleted, call the events endpoint in conjunction with the <b>process\_guid</b>. The events record catalogues past events and as such cannot give operators insight into the current status of their application. These events are also eventually removed from the system. 
+Call the events endpoint in conjunction with the <b>process\_guid</b> to obtain historical information from an app that has since been deleted. The events record catalogues past events and as such cannot give operators the most up-to-date information their application. These events are also eventually removed from the system. 
 
 To call the events record run the `cf curl` command in the following way: 
 `$ cf curl /v2/events?q=actee:CONTAINER_ID`. 
