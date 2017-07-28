@@ -495,14 +495,8 @@ Run the `grep` command in conjunction with the <b>container\_id</b> in the follo
 Example below: 
 
 <pre class="terminal">
-  grep d08bb414-cdba-4381-412a-e9ecc 10.193.79.42.log| grep "vcap.rep" | grep process\_guid
-</pre>
+  $ grep d08bb414-cdba-4381-412a-e9ecc 10.193.79.42.log| grep "vcap.rep" | grep process\_guid
 
-Run the `grep` command with the <b>container_id</b> to generate the <b>process\_guid</b>. 
-
-Example below:
-
-<pre class= "terminal">
   Jun 22 13:07:52 10.193.79.42 user vcap.rep [job=diego_cell index=2]  {"timestamp":"1498136872.889604807",
   "source":"rep","message":"rep.executing-container-operation.ordinary-lrp-processor.process-reserved-
   container.run-container.containerstore-run.node-run.action.run-step.process-exit","log_level":1,
@@ -516,7 +510,8 @@ Example below:
 The <b>process\_guid</b> string in the resulting output is comprised of 73 characters, inclusive of dashes. 
 
 Step 3. Obtain the app <b>name</b> and <b>space\_url</b>.
-You only need the first 36 characters of the <b>process\_guid</b> string in combination with the `cf curl` command to query for the app <b>name</b> and <b>space_url</b>. 
+
+Run the `cf curl` command in conjunction with the <b>process\_guid</b> to obtain the app <b>name</b> and <b>space\_url</b>. You only need the first 36 characters of the <b>process\_guid</b> to complete this step. 
 
 `$ cf curl /v2/apps/PROCESS_GUID`
 
@@ -638,12 +633,14 @@ If an app has been deleted, `cf curl /v2/apps/PROCESS_GUID` yields the following
   }
 </pre>
 
-Call the events endpoint in conjunction with the <b>process\_guid</b> to obtain historical information from an app that has since been deleted. The events record catalogues past events and as such cannot give operators the most up-to-date information their application. These events are also eventually removed from the system. 
+Call the events endpoint in conjunction with the <b>process\_guid</b> to obtain historical information from an app that has since been deleted. The events record catalogues past events and as such cannot give operators the most up-to-date information on their application. These events are also eventually removed from the system. 
 
 To call the events record run the `cf curl` command in the following way: 
 `$ cf curl /v2/events?q=actee:CONTAINER_ID`. 
 
-The resulting terminal output will contain the <b>space\_guid</b>, <b>organization\_guid</b>, and other relevant information. As an example, we will use the the <b>container\_id</b> from the prior example: 
+The resulting terminal output will contain the <b>space\_guid</b>, <b>organization\_guid</b>, and other relevant information. 
+
+Example below:
 
 <pre class= "terminal">
   $ cf curl /v2/events?q=actee:4ccbb24c-268e-421a-9d1b-3678b6eb40d0
@@ -693,7 +690,9 @@ The resulting terminal output will contain the <b>space\_guid</b>, <b>organizati
 
 ###<a id="cidr"></a> Trace the Traffic Logs of a CIDR Range
 
-To trace logs from a CIDR Range, set the `destination` attribute as a range of addresses, for example:
+To trace logs from a CIDR Range, set the `destination` attribute as a range of addresses.
+
+Example below:
 
 <pre class="terminal">
   [ 
