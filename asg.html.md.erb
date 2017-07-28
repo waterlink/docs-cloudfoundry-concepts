@@ -550,7 +550,7 @@ Example below:
 
 Step 4. Obtain the space <b>name</b> and <b>organization\_url</b> 
 
-Run the `cf curl` command in conjunction with the <b>space\_url</b> in the following way to obtain the space <b>name</b> and <b>organization\_url</b>, :
+Run the `cf curl` command in conjunction with the <b>space\_url</b> in the following way to obtain the space <b>name</b> and <b>organization\_url</b>:
 
 `$ cf curl /v2/spaces/SPACE_URL`
 
@@ -633,7 +633,7 @@ If an app has been deleted, `cf curl /v2/apps/PROCESS_GUID` yields an output sim
   }
 </pre>
 
-Call the events endpoint in conjunction with the <b>process\_guid</b> to obtain historical information from an app that has since been deleted. The events record catalogues past events and as such cannot give operators the most up-to-date information on their application. These events are also eventually removed from the system. 
+Call the events endpoint in conjunction with the <b>process\_guid</b> to obtain historical information from an app that has since been deleted. The events record catalogues past events and as such cannot give operators the most up-to-date information on their applications. These events are also eventually removed from the system. 
 
 To call the events record run the `cf curl` command in the following way: 
 `$ cf curl /v2/events?q=actee:CONTAINER_ID`. 
