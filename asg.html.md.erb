@@ -434,7 +434,7 @@ You can download the latest release of the ASG Creator from the Cloud Foundry in
 
 ## <a id='logging'></a> ASG Logging
 
-Tracing application logs can aid in troubleshooting and debugging. These logs provide granular information including the application:
+Tracing application logs can aid in troubleshooting and debugging. These logs provide granular information including the application's:
 
 + <b>name</b>
 + <b>space\_url</b>
@@ -476,7 +476,7 @@ To generate the desired log entry and related <b>container_id</b>, run the `grep
 
 `$ grep “DST= IP_ADDRESS”`
 
-As an example, we will be using 10.193.79.30 as the IP address. 
+Example below: 
 
 <pre class="terminal">
 $ grep “DST= 10.193.79.30”
@@ -492,7 +492,7 @@ To obtain the <b>process\_guid</b>, run the `grep` command in conjunction with t
 
 `$ grep CONTAINER_ID | grep “vcap.rep” | grep process_guid`
 
-As an example, we will use the <b>container\_id</b> from the prior example. 
+Example below: 
 
 <pre class="terminal">
   grep d08bb414-cdba-4381-412a-e9ecc 10.193.79.42.log| grep "vcap.rep" | grep process\_guid
@@ -518,7 +518,7 @@ You only need the first 36 characters of the <b>process\_guid</b> string in comb
 
 `$ cf curl /v2/apps/PROCESS_GUID`
 
-As an example, we will use the the <b>process\_guid</b> from the prior example. 
+Example below: 
 
 <pre class= "terminal">
   $ cf curl /v2/apps/4ccbb24c-268e-421a-9d1b-3678b6eb40d0
@@ -557,7 +557,7 @@ To obtain the space <b>name</b> and <b>organization\_url</b>, use the `cf curl` 
 
 `$ cf curl /v2/spaces/SPACE_URL`
 
-As an example, we will use the the <b>space\_url</b> from the prior example. 
+Example below: 
 
 <pre class= "terminal">
   $ cf curl /v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812
@@ -593,7 +593,7 @@ To obtain the organization <b>name</b> use the `cf curl` command in conjunction 
 
 `$ cf curl /v2/organizations/ORGANIZATION_URL`
 
-As an example, we will use the the <b>organizational\_url</b> from the prior example. 
+Example below: 
 
 <pre class= "terminal">
   $ cf curl /v2/organizations/2c279d6c-6f15-4cc0-99ed-72ef76ec50eb 
@@ -691,7 +691,7 @@ The resulting terminal output will contain the <b>space\_guid</b>, <b>organizati
 
 ###<a id="cidr"></a> Trace the Traffic Logs of a CIDR Range
 
-In order to trace logs from a CIDR Range, the `destination` attribute in the rules file must be defined as a range of addresses, for example:
+To trace logs from a CIDR Range, set the `destination` attribute as a range of addresses, for example:
 
 <pre class="terminal">
   [ 
@@ -706,9 +706,9 @@ In order to trace logs from a CIDR Range, the `destination` attribute in the rul
 </pre>
 
 <p class="note"><strong>Note:</strong>
-For this procedure to work, it is necessary to have aggregated logging for Syslog messages to a Syslog server. For more information, see the <a href="https://docs.pivotal.io/pivotalcf/1-10/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the "Configuring System Logging in Elastic Runtime" topic. 
+For this procedure to work, you must enable system log forwarding. For more information, see the <a href="https://docs.pivotal.io/pivotalcf/1-10/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the "Configuring System Logging in Elastic Runtime" topic. 
 </p>
 
-The method of obtaining the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_ name</b>,  <b>container\_id</b>, and <b>process\_guid</b> are the same as outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page.
+Use the same method outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page to obtain the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_ name</b>,  <b>container\_id</b>, and <b>process\_guid</b> for a CIDR range.
 
 <% end %>
