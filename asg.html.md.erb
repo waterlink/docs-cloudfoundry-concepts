@@ -438,9 +438,9 @@ Tracing application logs can aid in troubleshooting and debugging. These logs pr
 
 + <b>name</b>
 + <b>space\_url</b>
-+ <b>space\_name</b> 
++ space <b>name</b> 
 + <b>organization\_url</b>
-+ <b>organization\_name</b>
++ organization <b>name</b>
 + <b>container\_id</b> 
 + <b>process\_guid</b>
 
@@ -466,7 +466,7 @@ Below is a code sample from an example rules file. In this example, the rules fi
 
 ###<a id="single-ip"></a> Trace the Traffic Logs of a Single IP
 
-Obtaining the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, and <b>organization\_ name</b> is a sequential and interdependent process. 
+Obtaining the app <b>name</b>, <b>space\_url</b>, space <b>name</b>, <b>organization\_url</b>, and organization <b>name</b> is a sequential and interdependent process. 
 
 First, the operator must obtain the <b>container\_id</b>. The operator can then use the <b>container\_id</b> to obtain the <b>process\_guid</b>. The <b>process\_guid</b> is then queried to obtain the <b>space\_url</b>. The <b>space\_url</b> is then queried to obtain the space <b>name</b> and <b>organization\_url</b>. Finally, the <b>organization\_url</b> is queried to obtain the organization <b>name</b>.
 
@@ -481,7 +481,7 @@ Example below:
 <pre class="terminal">
 $ grep “DST= 10.193.79.30”
 
-10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9eccIN</b>=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
+10.193.79.42.log:Jun 20 23:05:03 10.193.79.42 kern kernel [job=diego_cell index=2] [1122561.945562] <b>d08bb414-cdba-4381-412a-e9ecc</b>IN=wbrdg-0afe0008 OUT=eth0 MAC=4e:b7:a4:74:e2:45:0a:5a:66:81:1f:1d:08:00 SRC=10.254.0.10 DST=10.193.79.30 LEN=60 TOS=0x00 PREC=0x00 TTL=63 ID=60879 DF PROTO=TCP SPT=42630 DPT=80 WINDOW=28280 RES=0x00 SYN URGP=0
 </pre>
 
 In the above terminal output, the <b>container\_id</b> is bolded. The <b>container\_id</b> is a 31 character unique ID that allows operators to trace back to the application. The <b>containder\_id</b>, as shown above, precedes “IN” in log entries. Operators must query the <b>container\_id</b> to obtain the <b>process\_guid</b>. 
@@ -584,7 +584,7 @@ Example below:
   "security_groups_url": "/v2/spaces/c65add41-d85b-4823-9e2a-545a5e0e5812/security_groups" 
 </pre>
 
-Step 5: Obtain the <b>organization\_name</b>
+Step 5: Obtain the organization <b>name</b>
 
 Run the `cf curl` command in conjunction with the <b>organization\_url</b> in the following way to obtain the organization <b>name</b>:
 
@@ -623,7 +623,7 @@ Example below:
 
 ###<a id="auditing-deleted-apps"></a> Auditing Deleted Apps
 
-If an app has been deleted, `cf curl /v2/apps/PROCESS_GUID` yields the following terminal output:
+If an app has been deleted, `cf curl /v2/apps/PROCESS_GUID` yields an output similar to the following:
 
 <pre class="terminal">
   {
@@ -690,7 +690,7 @@ Example below:
 
 ###<a id="cidr"></a> Trace the Traffic Logs of a CIDR Range
 
-To trace logs from a CIDR Range, set the `destination` attribute as a range of addresses.
+To trace logs from a CIDR Range, set the `destination` attribute in the rules file as a range of addresses.
 
 Example below:
 
@@ -707,9 +707,9 @@ Example below:
 </pre>
 
 <p class="note"><strong>Note:</strong>
-For this procedure to work, you must enable system log forwarding. For more information, see the <a href="https://docs.pivotal.io/pivotalcf/1-10/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the "Configuring System Logging in Elastic Runtime" topic. 
+For this procedure to work, you must enable system log forwarding. For more information, see the <a href="https://docs.pivotal.io/pivotalcf/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the "Configuring System Logging in Elastic Runtime" topic. 
 </p>
 
-Use the same method outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page to obtain the app <b>name</b>, <b>space\_url</b>, <b>space\_name</b>, <b>organization\_url</b>, <b>organization\_ name</b>,  <b>container\_id</b>, and <b>process\_guid</b> for a CIDR range.
+Use the same method outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page to obtain the app <b>name</b>, <b>space\_url</b>, space <b>name</b>, <b>organization\_url</b>, organization <b>name</b>,  <b>container\_id</b>, and <b>process\_guid</b> for a CIDR range.
 
 <% end %>
