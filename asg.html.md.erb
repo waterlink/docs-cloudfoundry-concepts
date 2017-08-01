@@ -446,9 +446,11 @@ Tracing application logs can aid in troubleshooting and debugging. These logs pr
 
 ### <a id="asg-logging-prereq"></a> Configure the Rules File
 
+
+
 To trace application logs, set the `log` attribute to `true` in the rules file. In the context of ASG Logging, a rules file is a JSON file that describes the rules for your Application Security Groups.
 
-For more information about configuring the rules file and creating Application Security Groups, see the “Create ASGs” section of the [Understanding Application Security Groups](https://docs.pivotal.io/pivotalcf/concepts/asg.html#asg-individual) topic. 
+For more information about configuring the rules file and creating Application Security Groups, see the “Create ASGs” section of the <%= vars.understanding_asg_individual_link %>. 
 
 Below is a code sample from an example rules file. In this example, the rules file is configured to forward requests to 10.87.35.105 through the syslog server. 
 
