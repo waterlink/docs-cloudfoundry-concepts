@@ -695,6 +695,8 @@ Example below:
 
 To trace logs from a CIDR Range, set the `destination` attribute in the rules file as a range of addresses.
 
+<%= vars.enable_syslog_forwarding_link %>
+
 Example below:
 
 <pre class="terminal">
@@ -709,10 +711,7 @@ Example below:
   ]
 </pre>
 
-<p class="note"><strong>Note:</strong>
-For this procedure to work, you must enable system log forwarding. For more information, see the <a href="https://docs.pivotal.io/pivotalcf/opsguide/logging-config-opsman.html#syslog-forward"> Enabling System Log Forwarding</a> section of the "Configuring System Logging in Elastic Runtime" topic. 
-</p>
-
 Use the same method outlined in the <a href="#single-ip">Tracing the Traffic Logs of a Single IP</a> section of this page to obtain the app <b>name</b>, <b>space\_url</b>, space <b>name</b>, <b>organization\_url</b>, organization <b>name</b>,  <b>container\_id</b>, and <b>process\_guid</b> for a CIDR range.
+
 
 <% end %>
