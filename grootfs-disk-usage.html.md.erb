@@ -20,7 +20,7 @@ For example:
 These commands are designed to be run on a BOSH-deployed VM running the Garden job.
 
 ## <a id='exclusive-disk'></a>How much disk is used exclusive to container X?
-On disk, the read-write layer for each container can be found at `/var/vcap/data/grootfs/store/unprivileged/images/some-image-id/diff`.
+On disk, the read-write layer for each container can be found at `/var/vcap/data/grootfs/store/unprivileged/images/CONTAINER-ID/diff`.
 When GrootFS calls on the built-in XFS quota tooling to get disk usage for a container, it takes into account data written to that directory and not the data in the read-only volumes.
 
 Running `grootfs stats` returns the following values:
@@ -28,18 +28,16 @@ Running `grootfs stats` returns the following values:
 * `total_bytes_used`: This is the disk usage of the container **including** the rootfs image volumes.
 * `exclusive_bytes_used`: This is the disk usage of the container **not** including the rootfs image volumes.
 
-Run the following command to look up container handles:
+Run the following command to look up the container ID:
 <pre class="terminal">
 $ ls /var/vcap/data/garden/depot/
 </pre>
-The output of the above command includes the container handles.
-
-For example:
+The command above returns output in the following format:
 <pre class="terminal">
 55afbf65-5cbf-49c6-4461-f803
 </pre>
 
-To check a container's disk usage, run the following command, replacing `CONTAINER-ID` with the container handle in the output of the previous command: 
+To check a container's disk usage, run the following command, replacing `CONTAINER-ID` with the container ID from the output of the previous command:
 
 ```
 /var/vcap/packages/grootfs/bin/grootfs --config \
@@ -49,16 +47,14 @@ To check a container's disk usage, run the following command, replacing `CONTAIN
 For example:
 <pre class="terminal">
 $ /var/vcap/packages/grootfs/bin/grootfs --config \
-/var/vcap/jobs/garden/config/grootfs_config.yml stats 55afbf65-5cbf-49c6-4461-f803
+/var/vcap/jobs/garden/config/grootfs\_config.yml stats 55afbf65-5cbf-49c6-4461-f803
 </pre>
-The output of the above command includes the container's disk usage.
-
-For example:
+<p class="note"><strong>Note</strong>: For privileged containers, replace <code>grootfs\_config.yml</code> in the above command with <code>privileged\_grootfs\_config.yml</code>.</p>
+The command above returns output in the following format:
 <pre class="terminal">
 {"disk\_usage":{"total\_bytes\_used":23448093,"exclusive\_bytes\_used":8192}}
 </pre>
 
-If you are also creating privileged containers, update the config path in the above command to use `privileged_grootfs_config.yml`.
 
 ## How much exclusive disk is used across all running containers?
 ```sh
