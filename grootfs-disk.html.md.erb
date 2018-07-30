@@ -7,13 +7,14 @@ owner: Security
 
 This topic describes how GrootFS manages disk space in <%= vars.product_full %>.
 
+The commands in this topic are designed to be run on a BOSH-deployed VM running the Garden job.
+
 ## <a id='space'></a>How much disk space is GrootFS using?
 
 To reconcile disk allocations for containers with the actual disk usage on the host VM, you need to understand how GrootFS uses its disk.
 Command line tools such as `du` and `df` can provide misleading information because of the way container file systems work.
-These commands are designed to be run on a BOSH-deployed VM running the Garden job.
 
-For example, the following table describes situations that can occur:
+For example, the following situations can occur:
 
 <table>
   <tr>
@@ -52,8 +53,8 @@ The command above returns a container ID in the following format:
 
 To check a container's disk usage, run the following command, replacing `CONTAINER-ID` with the container ID from the output of the previous command:
 
-```sh
-$ /var/vcap/packages/grootfs/bin/grootfs --config \
+```
+/var/vcap/packages/grootfs/bin/grootfs --config \
 /var/vcap/jobs/garden/config/grootfs_config.yml stats CONTAINER-ID
 ```
 
@@ -92,27 +93,27 @@ To find out the size of an individual volume, read the corresponding metadata fi
 
 For example, run the following command, replacing `VOLUME-SHA` with the SHA value of the volume:
 
-```sh
-$ cat /var/vcap/data/grootfs/store/unprivileged/meta/volume-VOLUME-SHA
+```
+cat /var/vcap/data/grootfs/store/unprivileged/meta/volume-VOLUME-SHA
 ```
 
 The command above returns the volume size in bytes in the following format:
 
-```sh
+```
 {"Size":5607885}
 ```
 
 You can also use `du` and pass the absolute path to the volume.
 Run the following command, replacing `VOLUME-SHA` with the SHA of the volume:
 
-```sh
-$ du -sch /var/vcap/data/grootfs/store/unprivileged/volumes/VOLUME-SHA/
+```
+du -sch /var/vcap/data/grootfs/store/unprivileged/volumes/VOLUME-SHA/
 ```
 <p class="note"><strong>Note</strong>: For privileged containers, replace <code>unprivileged</code> in the above command with <code>privileged</code>.</p>
 
 The command above returns the volume size in the following format:
 
-```sh
+```
 5.4M    /var/vcap/data/grootfs/store/unprivileged/volumes/VOLUME-SHA/
 ```
 
@@ -151,7 +152,7 @@ $ df | grep -E  "/var/vcap/data/grootfs/store/(privileged|unprivileged)$" | awk 
 
 The command above returns the total number of bytes used by the store.
 
-## <a id="pruning-volumes"></a>How much disk could be reclaimed by pruning unused volumes?
+## <a id="pruning-volumes"></a>How much disk can be reclaimed by pruning unused volumes?
 
 You can use values gathered from commands above to calculate how much space could be reclaimed by pruning unused volumes.
 
@@ -176,27 +177,44 @@ Do the following:
 
 In the example above, you can reclaim 2395450 bytes by pruning unused volumes.
 
-## Are there categories of grootfs disk usage that should be accounted for, other than the ones above? If so, how much disk usage do they account for?
-The bulk of disk usage will go to the `images/<id>/diff` and `volumes` directories (found under `/var/vcap/data/grootfs/store/{unprivileged,privileged}/`).
+## <a id="categories"></a>Are there other categories of GrootFS disk usage to account for?
 
+There may be categories of GrootFS disk usage other than those listed in the above sections.
+If so, the bulk of disk usage is stored in the `images/CONTAINER-ID/diff` and `volumes` directories.
+
+You can find these directories under `/var/vcap/data/grootfs/store/unprivileged` for unprivileged containers and `/var/vcap/data/grootfs/store/unprivileged` for privileged containers.
 
 GrootFS also stores information in the following directories:
- - `l` -> link dirs. Shorter dir-names symlinked to volume dirs to allow groot to union mount more layers/filepaths.
- - `locks` -> filesystem lock dir to ensure safety during concurrent cleans/creates.
- - `meta` -> per image and volume metadata.
- - `projectids` -> empty numbered directories used to track image quotas.
- - `tmp` -> normal tempdir stuff.
 
+ - `l`: link directories. Shorter directory names are symlinked to volume directories to allow Groot to union mount more file paths.
+ - `locks`: file system lock directory to ensure safety during concurrent cleans and creates.
+ - `meta`: per image and volume metadata.
+ - `projectids`: empty numbered directories used to track image quotas.
+ - `tmp`: normal temporary directory contents.
 
-These would would usually total less than 2MB.
+These directories typically use less than 2&nbsp;MB disk in total.
 
-## If I force grootfs to prune its cache, would I be able to reduce total disk usage to Z% of local disk or to W GB?
-It would rarely be necessary to force GrootFS to clean its cache, but if more space is needed on disk, then operators should set the `reserved_space_for_other_jobs_in_mb` property to a higher value.
-How much space is freed would depend on how many layers/volumes are actively used by images/rootfses. You can use values gathered from commands above to calculate the space which
-could be cleared by a force clean: total disk in use by store - total disk used by active layers.
+## <a id="clean-cache"></a>If I force GrootFS to prune its cache, can I reduce total disk usage to a given size or percentage of local disk?
 
-## Is grootfs using more disk than it is configured to use, or is it behaving correctly?
-Grootfs stores are [initialised](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/jobs/garden/templates/bin/overlay-xfs-setup#L23-L46) to use the [entire](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/jobs/garden/templates/bin/grootfs-utils.erb#L31) `/var/vcap/data`. If the `reserved_space_for_other_jobs_in_mb` is not set high enough, or if there are many images with few shared volumes, it could use it all.
-The [Thresholder](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/src/thresholder/main.go) calculates and sets a value so that Groot’s GC will try to ensure that a small reserved space is kept free for other jobs. Groot will only try to GC when that threshold is reached.
-However, if all the rootfs layers are active (in use by images), then GC cannot occur and that space will be used.
+It would rarely be necessary to force GrootFS to clean its cache, but if more space is needed on disk, then you can set the `reserved_space_for_other_jobs_in_mb` property to a higher value.
+How much space is freed depends on how many volumes are actively in use by images.
 
+You can use values gathered from the commands above to calculate how much space can be cleared by a force clean.
+Subtract the total disk in use by the store from the total disk used by active volumes.
+
+For more information, see [How much disk could be reclaimed by pruning unused volumes?](#pruning-volumes) above.
+
+## <a id="disk-overuse"></a>Is GrootFS using more disk than it is configured to use?
+
+GrootFS stores are initialized to use the entire `/var/vcap/data`.
+If the `reserved_space_for_other_jobs_in_mb` is not set high enough, or if there are many images with few shared volumes, it could use it all.
+
+The thresholder calculates and sets a value so that Groot’s GC tries to ensure that a small reserved space is kept free for other jobs.
+Groot only tries to GC when that threshold is reached.
+However, if all the rootfs layers are actively in use by images, then GC cannot occur and that space is used.
+
+For more information, see the following sections of `garden-runc-release`:
+
+* [overlay-xfs-setup](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/jobs/garden/templates/bin/overlay-xfs-setup#L23-L46)
+* [grootfs-utils](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/jobs/garden/templates/bin/grootfs-utils.erb#L31)
+* [thresholder](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/src/thresholder/main.go)
