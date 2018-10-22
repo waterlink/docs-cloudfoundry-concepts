@@ -9,12 +9,16 @@ This topic describes how GrootFS manages disk space in <%= vars.product_full %>.
 
 ## <a id="store"></a> GrootFS Stores
 
-GrootFS is the container root filesystem management component for Garden. Container rootfses are often referred to as **images**.
+GrootFS is the container root filesystem management component for Garden. 
+
+A container rootfs is often referred to as an **image**.
+
 A **GrootFS store** is the directory in which rootfs layers and container images are cached. This directory is configured by GrootFS and mounted on an
-XFS formatted volume during BOSH vm creation, via the Garden job, during BOSH vm creation.
+XFS-formatted volume by the Garden job during BOSH VM creation.
+
 Individual container root filesystems are provided via OverlayFS mounts.
 
-Supplying GrootFS with an already formatted XFS volume for its store is not yet supported for BOSH controlled deployments.
+Supplying GrootFS with an already formatted XFS volume for its store is not yet supported for BOSH-controlled deployments.
 
 ### <a id="garbage_coll"></a> General Garbage Collection Behavior in GrootFS Stores
 
@@ -72,7 +76,7 @@ but not layer-1 because Image A still uses that layer.
 
 For more information, see the following sections of `garden-runc-release`:
 
-* [Managing GrootFS Disk Usage](../adminguide/managing_grootfs_disk.html)
+* [Examining GrootFS Disk Usage](../adminguide/managing_grootfs_disk.html)
 * [overlay-xfs-setup](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/jobs/garden/templates/bin/overlay-xfs-setup#L23-L46)
 * [grootfs-utils](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/jobs/garden/templates/bin/grootfs-utils.erb#L31)
 * [thresholder](https://github.com/cloudfoundry/garden-runc-release/blob/b4a44c5cabb1570eaeb25b158823cfbd97ae530c/src/thresholder/main.go)
